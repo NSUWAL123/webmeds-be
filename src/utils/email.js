@@ -1,32 +1,31 @@
 const nodemailer = require("nodemailer");
 
 const sendMail = (email, subject, text) => {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.USER_EMAIL,
-          pass: process.env.USER_EMAIL_PASS,
-        },
-      });
-  
-      let mailOptions = {
-        from: process.env.USER_EMAIL,
-        to: email,
-        subject: subject,
-        html: text,
-      };
-  
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
-}
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.USER_EMAIL,
+      pass: process.env.USER_EMAIL_PASS,
+    },
+  });
+
+  let mailOptions = {
+    from: process.env.USER_EMAIL,
+    to: email,
+    subject: subject,
+    html: text,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
 
 const sendSignUpSuccessfulMail = (email, name) => {
-  console.log(email, name);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -71,6 +70,6 @@ const sendSignUpSuccessfulMail = (email, name) => {
       console.log("Email sent: " + info.response);
     }
   });
-}
+};
 
-module.exports = {sendMail, sendSignUpSuccessfulMail};
+module.exports = { sendMail, sendSignUpSuccessfulMail };

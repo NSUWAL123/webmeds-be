@@ -4,23 +4,20 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const {sendMail, sendSignUpSuccessfulMail} = require("../utils/email");
+const { sendMail, sendSignUpSuccessfulMail } = require("../utils/email");
 
 // 1. Signup module
 const signup = async (req, res) => {
   const { name, email, mobile, age, password } = req.body;
+  const isUserInDB = await User.findOne({ email });
 
   if (!name || !email || !mobile || !age || !password) {
     res.send("Missing Fields");
-    console.log("Missing Fields");
     return;
   }
 
-  const isUserInDB = await User.findOne({ email });
-
   if (isUserInDB) {
     res.send("User already exists.");
-    console.log("User already exist.");
     return;
   }
 
@@ -85,21 +82,27 @@ const login = async (req, res) => {
       "An Email with verification link has been sent to you. Please check your Email."
     );
   }
+ 
 
-  res.send("Successfully logged In.");
+  const data = {
+    user: {
+      id: user._id,
+    }
+  }
+
+  const authtoken = jwt.sign(data, process.env.JWT_SECRET);
+  res.json({authtoken})
 };
 
 //3. verify token
 const verifyToken = async (req, res) => {
   const user = await User.findOne({ _id: req.params.id });
-  console.log(user);
 
   const token = await Token.findOne({
     userId: user._id,
     token: req.params.token,
   });
-  console.log(token);
-  
+
   if (!user) {
     res.send("Invalid Verification Link.");
     return;
