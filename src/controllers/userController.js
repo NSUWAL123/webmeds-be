@@ -8,11 +8,15 @@ const { sendMail, sendSignUpSuccessfulMail } = require("../utils/email");
 
 // 1. Signup module
 const signup = async (req, res) => {
-  const { name, email, mobile, age, password } = req.body;
+  const { name, email, mobile, dob, password } = req.body;
   const isUserInDB = await User.findOne({ email });
 
-  if (!name || !email || !mobile || !age || !password) {
-    res.send("Missing Fields");
+  if (!name || !email || !mobile || !dob || !password) {
+    res.json({
+      lvl: "warning",
+      message: "Missing Fields"
+    })
+    // res.send("Missing Fields");
     return;
   }
 
@@ -28,7 +32,7 @@ const signup = async (req, res) => {
     name: name,
     email: email,
     mobile: mobile,
-    age: age,
+    dob: dob,
     password: securePass,
   });
 
@@ -40,7 +44,8 @@ const signup = async (req, res) => {
   const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
   sendMail(user.email, "Verify Email", url);
 
-  res.send("An Email has been sent to your account. Please verify.");
+  res.json({user})
+  // res.send("An Email has been sent to your account. Please verify.");
 };
 
 // 2. Login module
@@ -74,13 +79,14 @@ const login = async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       });
 
-      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
+      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;  
       sendMail(user.email, "Verify Email", url);
     }
 
     return res.send(
       "An Email with verification link has been sent to you. Please check your Email."
     );
+ 
   }
  
 
@@ -91,29 +97,32 @@ const login = async (req, res) => {
   }
 
   const authtoken = jwt.sign(data, process.env.JWT_SECRET);
-  res.json({authtoken})
+  res.json({authtoken: authtoken, status: true, message: "Successfully Logged In."})
 };
 
 //3. verify token
 const verifyToken = async (req, res) => {
   const user = await User.findOne({ _id: req.params.id });
 
-  const token = await Token.findOne({
-    userId: user._id,
-    token: req.params.token,
-  });
-
   if (!user) {
     res.send("Invalid Verification Link.");
     return;
   }
-
+  
+  const token = await Token.findOne({
+    userId: user._id,
+    token: req.params.token,
+  });
+  
   if (!token) {
     res.send("Invalid Verification Link.");
     return;
   }
 
-  await User.updateOne({ _id: user._id, verified: true });
+  console.log(user)
+  await User.findByIdAndUpdate(user._id, {verified: true})
+  // await User.updateOne({ _id: user._id, verified: true });
+
   sendSignUpSuccessfulMail(user.email, user.name);
   await token.remove();
 

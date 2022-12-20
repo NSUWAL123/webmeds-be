@@ -14,8 +14,8 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
-  age: {
-    type: Number,
+  dob: {
+    type: Date,
     required: true,
   },
   password: {
