@@ -12,11 +12,7 @@ const signup = async (req, res) => {
   const isUserInDB = await User.findOne({ email });
 
   if (!name || !email || !mobile || !dob || !password) {
-    res.json({
-      lvl: "warning",
-      message: "Missing Fields"
-    })
-    // res.send("Missing Fields");
+    res.send("Missing Fields");
     return;
   }
 
@@ -88,7 +84,6 @@ const login = async (req, res) => {
     );
  
   }
- 
 
   const data = {
     user: {

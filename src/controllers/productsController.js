@@ -1,3 +1,7 @@
+const getAllProducts = (req, res) => {
+    res.send("All products");
+}
+
 const medicine = (req, res) => {
     res.send("In medicines");
 }
@@ -10,4 +14,4 @@ const personalcare = (req, res) => {
     res.send("In personalcare");
 }
 
-module.exports = {medicine, baby, personalcare};
+module.exports = {getAllProducts, medicine, baby, personalcare};

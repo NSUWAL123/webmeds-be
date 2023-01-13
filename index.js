@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectToMongo = require("./src/config/db");
 const userRoutes = require("./src/routes/userRoutes");
-const categoriesRoutes = require("./src/routes/categoryRoutes")
+const productRoutes = require("./src/routes/productRoutes")
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
 
@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
-app.use("/categories", categoriesRoutes);
+app.use("/products", productRoutes);
 
 
 app.use(notFoundHandler);
