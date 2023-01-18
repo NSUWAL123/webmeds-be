@@ -23,7 +23,11 @@ const addProduct = async (req, res) => {
   try {
     const isProductInDB = await Product.findOne({ pname }); 
     if (isProductInDB) {
-      res.send("Product Already Exists.");
+      //res.send("Product Already Exists.");
+      res.json({
+        message: "Product already exists.",
+        lvl: "warning"
+      })
       return;
     }
 
@@ -32,6 +36,7 @@ const addProduct = async (req, res) => {
     const uploadResponse = await cloudinary.uploader.upload(previewSource,{
       upload_preset: 'product-pic'
     });
+
     console.log("uploaded")
 
     const {url} = uploadResponse
@@ -50,6 +55,11 @@ const addProduct = async (req, res) => {
       productPicURL: url,
       description: description,
     });
+
+    res.json({
+      message: "Product added successfully",
+      lvl: "success"
+    })
     
   } catch (error) {
     console.log(error)

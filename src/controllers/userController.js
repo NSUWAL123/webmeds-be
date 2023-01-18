@@ -17,7 +17,12 @@ const signup = async (req, res) => {
   }
 
   if (isUserInDB) {
-    res.send("User already exists.");
+    //res.send("User already exists.");
+    res.json({
+      message: "User with this email already exits.",
+      lvl: "error",
+      data: "",
+    })
     return;
   }
 
@@ -40,7 +45,12 @@ const signup = async (req, res) => {
   const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
   sendMail(user.email, "Verify Email", url);
 
-  res.json({user})
+  res.json({
+    message: "An email has been sent to your account for verification. Please verify.",
+    lvl: "info",
+    data: "",
+  })
+  //res.json({user})
   // res.send("An Email has been sent to your account. Please verify.");
 };
 
@@ -56,14 +66,24 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    res.send("User not registered. Please Signup");
+    //res.send("User not registered. Please Signup");
+    res.json({
+      message: "User Not Registered. Please Signup",
+      lvl: "error",
+      data: "",
+    })
     return;
   }
 
   const isPassMatched = await bcrypt.compare(password, user.password);
 
   if (!isPassMatched) {
-    res.send("Invalid Credentials.");
+    //res.send("Invalid Credentials.");
+    res.json({
+      message: "Invalid Credentials.",
+      lvl: "error",
+      data: "",
+    })
     return;
   }
 
@@ -78,11 +98,12 @@ const login = async (req, res) => {
       const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;  
       sendMail(user.email, "Verify Email", url);
     }
-
-    return res.send(
-      "An Email with verification link has been sent to you. Please check your Email."
-    );
- 
+    res.json({
+      message: "An Email with verification link has been sent to you. Please check your Email.",
+      lvl: "info",
+      data: "",
+    }) 
+    return;
   }
 
   const data = {
@@ -92,7 +113,7 @@ const login = async (req, res) => {
   }
 
   const authtoken = jwt.sign(data, process.env.JWT_SECRET);
-  res.json({authtoken: authtoken, status: true, message: "Successfully Logged In."})
+  res.json({ message: "Successfully Logged In.", lvl: "success", data: authtoken})
 };
 
 //3. verify token
