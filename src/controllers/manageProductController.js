@@ -1,10 +1,9 @@
 const Product = require("../models/productModel");
-//const cloudinary = require("cloudinary").v2
-const cloudinary = require("../utils/cloudinary")
+const cloudinary = require("../utils/cloudinary");
 
 const addProduct = async (req, res) => {
-  //res.send("Add Products")
-  console.log("endpoint hit hanyo")
+
+  //extracting all data from input fields
   const {
     pname,
     purpose,
@@ -19,27 +18,25 @@ const addProduct = async (req, res) => {
     previewSource,
     description,
   } = req.body;
-  
+
   try {
-    const isProductInDB = await Product.findOne({ pname }); 
+    //not allowing to add product to inventory if product name already exists
+    const isProductInDB = await Product.findOne({ pname });
     if (isProductInDB) {
-      //res.send("Product Already Exists.");
       res.json({
         message: "Product already exists.",
-        lvl: "warning"
-      })
+        lvl: "warning",
+      });
       return;
     }
 
     //cloudinary image upload
-    console.log("uploading image")
-    const uploadResponse = await cloudinary.uploader.upload(previewSource,{
-      upload_preset: 'product-pic'
+    const uploadResponse = await cloudinary.uploader.upload(previewSource, {
+      upload_preset: "product-pic",
     });
 
-    console.log("uploaded")
-
-    const {url} = uploadResponse
+    //extracting url from response
+    const { url } = uploadResponse;
 
     let product = Product.create({
       pname: pname,
@@ -58,18 +55,16 @@ const addProduct = async (req, res) => {
 
     res.json({
       message: "Product added successfully",
-      lvl: "success"
-    })
-    
+      lvl: "success",
+    });
   } catch (error) {
-    console.log(error)
-  }  
+    console.log(error);
+  }
 };
 
 const updateProduct = async (req, res) => {
-  
-  
-  console.log("endpoint hit hanyo")
+
+  //extracting all data from input fields
   const {
     pname,
     purpose,
@@ -81,13 +76,13 @@ const updateProduct = async (req, res) => {
     offerPrice,
     stock,
     expiry,
-    previewSource,
+    previewSource, //picture cannot be updated
     description,
   } = req.body;
-  
+
   try {
-    console.log(pname)
-  const isProductInDB = await Product.findByIdAndUpdate(req.params.id, {
+    //finding product by id and updating
+    const isProductInDB = await Product.findByIdAndUpdate(req.params.id, {
       pname: pname,
       purpose: purpose,
       type: type,
@@ -98,56 +93,29 @@ const updateProduct = async (req, res) => {
       offerPrice: offerPrice,
       stock: stock,
       expiry: expiry,
-  
       description: description,
-  }); 
-  console.log(isProductInDB);
-    // if (isProductInDB) {
-    //   //res.send("Product Already Exists.");
-    //   res.json({
-    //     message: "Product already exists.",
-    //     lvl: "warning"
-    //   })
-    //   return;
-    // }
-
-    //cloudinary image upload
-    // console.log("uploading image")
-    // const uploadResponse = await cloudinary.uploader.upload(previewSource,{
-    //   upload_preset: 'product-pic'
-    // });
-
-    // console.log("uploaded")
-
-    // const {url} = uploadResponse
-
-    // let product = Product.create({
-    //   pname: pname,
-    //   purpose: purpose,
-    //   type: type,
-    //   category: category,
-    //   company: company,
-    //   price: price,
-    //   discountPct: discountPct,
-    //   offerPrice: offerPrice,
-    //   stock: stock,
-    //   expiry: expiry,
-    //   productPicURL: url,
-    //   description: description,
-    // });
+    });
 
     res.json({
       message: "Product updated successfully",
-      lvl: "success"
-    })
-    
+      lvl: "success",
+    });
+
   } catch (error) {
-    console.log(error)
-  } 
+    console.log(error);
+  }
 };
 
-const deleteProduct = (req, res) => {
-  res.send("Delete Products");
+const deleteProduct = async (req, res) => {
+  
+  //extracting id from body then searching & deleting from db
+  const { id } = req.body;
+  const product = await Product.findByIdAndDelete(id);
+
+  res.json({
+    message: "Product Deleted successfully",
+    lvl: "success",
+  });
 };
 
 module.exports = { addProduct, updateProduct, deleteProduct };

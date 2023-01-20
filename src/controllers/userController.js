@@ -17,12 +17,11 @@ const signup = async (req, res) => {
   }
 
   if (isUserInDB) {
-    //res.send("User already exists.");
     res.json({
       message: "User with this email already exits.",
       lvl: "error",
       data: "",
-    })
+    });
     return;
   }
 
@@ -46,12 +45,11 @@ const signup = async (req, res) => {
   sendMail(user.email, "Verify Email", url);
 
   res.json({
-    message: "An email has been sent to your account for verification. Please verify.",
+    message:
+      "An email has been sent to your account for verification. Please verify.",
     lvl: "info",
     data: "",
-  })
-  //res.json({user})
-  // res.send("An Email has been sent to your account. Please verify.");
+  });
 };
 
 // 2. Login module
@@ -63,30 +61,30 @@ const login = async (req, res) => {
     return;
   }
 
+  //if user does not exists
   const user = await User.findOne({ email });
-
   if (!user) {
-    //res.send("User not registered. Please Signup");
     res.json({
       message: "User Not Registered. Please Signup",
       lvl: "error",
       data: "",
-    })
+    });
     return;
   }
 
   const isPassMatched = await bcrypt.compare(password, user.password);
 
+  //if password does not match
   if (!isPassMatched) {
-    //res.send("Invalid Credentials.");
     res.json({
       message: "Invalid Credentials.",
       lvl: "error",
       data: "",
-    })
+    });
     return;
   }
 
+  //if user not verified & send token is expired then generate new token
   if (!user.verified) {
     let token = await Token.findOne({ userId: user._id });
     if (!token) {
@@ -95,51 +93,62 @@ const login = async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       });
 
-      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;  
+      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
       sendMail(user.email, "Verify Email", url);
     }
     res.json({
-      message: "An Email with verification link has been sent to you. Please check your Email.",
+      message:
+        "An Email with verification link has been sent to you. Please check your Email.",
       lvl: "info",
       data: "",
-    }) 
+    });
     return;
   }
 
   const data = {
     user: {
       id: user._id,
-    }
-  }
+    },
+  };
 
   const authtoken = jwt.sign(data, process.env.JWT_SECRET);
-  res.json({ message: "Successfully Logged In.", lvl: "success", data: authtoken})
+  res.json({
+    message: "Successfully Logged In.",
+    lvl: "success",
+    data: authtoken,
+  });
 };
 
 //3. verify token
 const verifyToken = async (req, res) => {
   const user = await User.findOne({ _id: req.params.id });
 
+  //if user does not exist
   if (!user) {
     res.send("Invalid Verification Link.");
     return;
   }
-  
+
+  //find token from db
   const token = await Token.findOne({
     userId: user._id,
     token: req.params.token,
   });
-  
+
   if (!token) {
     res.send("Invalid Verification Link.");
     return;
   }
 
-  console.log(user)
-  await User.findByIdAndUpdate(user._id, {verified: true})
-  // await User.updateOne({ _id: user._id, verified: true });
+  console.log(user);
 
+  //updating verified status to true if user clicks verification link
+  await User.findByIdAndUpdate(user._id, { verified: true });
+
+  //send success mail to user
   sendSignUpSuccessfulMail(user.email, user.name);
+
+  //then remove token from the db
   await token.remove();
 
   res.send("Email Verified Successfully.");
