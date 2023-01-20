@@ -12,6 +12,11 @@ const getProductByName = async (req, res) => {
     res.json(product)
 }
 
+const getProductById = async (req, res) => {
+    const product = await Product.findOne({_id: req.params.id})
+    res.json(product)
+}
+
 const medicine = (req, res) => {
     res.send("In medicines");
 }
@@ -24,4 +29,4 @@ const personalcare = (req, res) => {
     res.send("In personalcare");
 }
 
-module.exports = {getAllProducts, medicine, baby, personalcare, getProductByName};
+module.exports = {getAllProducts, medicine, baby, personalcare, getProductByName, getProductById};
