@@ -10,6 +10,7 @@ const authUser = (req, res, next) => {
   try {
     const data = jwt.verify(authtoken, process.env.JWT_SECRET);
     req.user = data.user;
+    // console.log(req.user)
     next();
   } catch (error) {
     res.send("Please authenticate using a valid token2.");
