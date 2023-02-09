@@ -34,6 +34,7 @@ const signup = async (req, res) => {
     mobile: mobile,
     dob: dob,
     password: securePass,
+    billingAddress: ""
   });
 
   const token = await Token.create({
@@ -154,4 +155,21 @@ const verifyToken = async (req, res) => {
   res.send("Email Verified Successfully.");
 };
 
-module.exports = { signup, login, verifyToken };
+
+const getUser = async(req, res) => {
+  const user = await User.findById(req.user.id);
+  res.json(user);
+}
+
+//update user details
+const updateUser = async(req, res) => {
+  const user = await User.findByIdAndUpdate(req.user.id, {
+    name: req.body.name,
+    mobile: req.body.mobile,
+    billingAddress: req.body.billingAddress
+  })
+
+  res.json("User updated successfully.");
+}
+
+module.exports = { signup, login, verifyToken, getUser, updateUser };

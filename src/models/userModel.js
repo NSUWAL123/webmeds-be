@@ -30,6 +30,11 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  billingAddress: {
+    type: String,
+    required: false,
+    // default: ""
+  }
 });
 
 module.exports = mongoose.model("user", userSchema);
