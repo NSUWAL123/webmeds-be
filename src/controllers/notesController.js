@@ -22,7 +22,7 @@ const addNotes = async (req, res) => {
     const noteId = newNote._id;
 
     res.json({
-        noteId,
+        _id: noteId,
         userId,
         title,
         description
