@@ -6,7 +6,8 @@ const connectToMongo = require("./src/config/db");
 const userRoutes = require("./src/routes/userRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
 const productRoutes = require("./src/routes/productRoutes");
-const noteRoutes = require("./src/routes/noteRoutes")
+const noteRoutes = require("./src/routes/noteRoutes");
+const cartRoutes = require("./src/routes/cartRoutes")
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
 
@@ -25,6 +26,7 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
 app.use("/notes", noteRoutes)
+app.use("/cart", cartRoutes)
 
 app.use(notFoundHandler);
 app.use(errorHandler);
