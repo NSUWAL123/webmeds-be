@@ -21,8 +21,9 @@ const addCart = async (req, res) => {
   });
 
   if (isProductInCart) {
-    console.log(isProductInCart);
+    // console.log(isProductInCart);
     let newQty = isProductInCart.quantity + quantity;
+    console.log(newQty)
 
     const updateQty = await Cart.findByIdAndUpdate(isProductInCart._id, {
       quantity: newQty,
@@ -62,6 +63,7 @@ const editCart = async (req, res) => {
 
 // 3. Removes an individual cart item
 const removeCart = async (req, res) => {
+  console.log("paye")
   const removeCart = await Cart.findByIdAndDelete(req.body.cartId)
 
   res.json("Item removed from Cart.")
