@@ -7,7 +7,6 @@ const getCart = async (req, res) => {
   const getCart = await Cart.find({
     userId: userId
   })
-
   res.json({ getCart })
 };
 
@@ -22,15 +21,16 @@ const addCart = async (req, res) => {
 
   if (isProductInCart) {
     // console.log(isProductInCart);
-    let newQty = isProductInCart.quantity + quantity;
-    console.log(newQty)
+    // let newQty = isProductInCart.quantity + quantity;
+    // console.log(newQty)
 
-    const updateQty = await Cart.findByIdAndUpdate(isProductInCart._id, {
-      quantity: newQty,
-    });
+    // const updateQty = await Cart.findByIdAndUpdate(isProductInCart._id, {
+    //   quantity: newQty,
+    // });
+    // console.log(updateQty)
 
     res.json({
-      message: "Cart Quantity Updated.",
+      message: "This product has already been added to the cart.",
     });
     return;
   }
@@ -40,6 +40,7 @@ const addCart = async (req, res) => {
     userId: req.user.id,
     productId: productId,
     quantity: quantity,
+    isCheck: false
   });
 
   res.json({
@@ -61,12 +62,20 @@ const editCart = async (req, res) => {
   })
 };
 
+const toggleCheck = async (req, res) => {
+  const {cartId, isCheck} = req.body;
+  const updateCheck = await Cart.findByIdAndUpdate(cartId, {
+    isCheck: isCheck,
+  }); 
+}
+
 // 3. Removes an individual cart item
 const removeCart = async (req, res) => {
   console.log("paye")
-  const removeCart = await Cart.findByIdAndDelete(req.body.cartId)
+  const removeCart = await Cart.findByIdAndDelete(req.params.id)
 
-  res.json("Item removed from Cart.")
+  res.json(removeCart)
+  // res.json("Item removed from Cart.")
 };
 
 // 4. Removes all cart items of a user
@@ -74,4 +83,4 @@ const removeAllCart = async (req, res) => {
 
 };
 
-module.exports = { getCart, addCart, editCart, removeAllCart, removeCart };
+module.exports = { getCart, addCart, editCart, removeAllCart, removeCart, toggleCheck };

@@ -15,6 +15,10 @@ const cartSchema = new Schema({
     quantity: {
         type: Number,
         required: true
+    },
+    isCheck: {
+        type: Boolean,
+        required: true
     }
 })
 
