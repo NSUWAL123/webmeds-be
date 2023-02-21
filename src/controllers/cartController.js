@@ -12,7 +12,6 @@ const getCart = async (req, res) => {
 
 const addCart = async (req, res) => {
   const { productId, quantity } = req.body;
-  // console.log(productId, 2)
 
   const isProductInCart = await Cart.findOne({
     userId: req.user.id,
@@ -20,15 +19,6 @@ const addCart = async (req, res) => {
   });
 
   if (isProductInCart) {
-    // console.log(isProductInCart);
-    // let newQty = isProductInCart.quantity + quantity;
-    // console.log(newQty)
-
-    // const updateQty = await Cart.findByIdAndUpdate(isProductInCart._id, {
-    //   quantity: newQty,
-    // });
-    // console.log(updateQty)
-
     res.json({
       message: "This product has already been added to the cart.",
     });

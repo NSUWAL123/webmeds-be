@@ -172,4 +172,12 @@ const updateUser = async(req, res) => {
   res.json("User updated successfully.");
 }
 
-module.exports = { signup, login, verifyToken, getUser, updateUser };
+const updateAddress = async (req, res) => {
+  const address = await User.findByIdAndUpdate(req.user.id, {
+    billingAddress: req.body.billingAddress
+  })
+
+  res.json("Billing address updated successfully.");
+} 
+
+module.exports = { signup, login, verifyToken, getUser, updateUser, updateAddress };
