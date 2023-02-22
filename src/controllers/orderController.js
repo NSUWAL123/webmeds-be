@@ -1,8 +1,17 @@
 const Order = require("../models/orderModal");
 
+// 1. returns all the orders who's state is not delivered
+const getAllOrders = async (req, res) => {
+  const response = await Order.find();
+  res.json(response)
+}
+
+
 const getOrder = async (req, res) => {
  
 };
+
+
 
 const addOrder = async (req, res) => {
   const userId = req.user.id;
@@ -43,4 +52,4 @@ const addOrder = async (req, res) => {
 
 const deleteOrder = async (req, res) => {};
 
-module.exports = { getOrder, addOrder, deleteOrder };
+module.exports = { getAllOrders, getOrder, addOrder, deleteOrder };
