@@ -50,6 +50,16 @@ const addOrder = async (req, res) => {
   })
 };
 
+const updateOrder = async (req, res) => {
+  const {id, deliveryStatus} = req.body;
+
+  const orderUpdate = await Order.findByIdAndUpdate(id, {deliveryStatus: deliveryStatus})
+  res.json({
+    message: "Order status changed.",
+    data: orderUpdate,
+  })
+};
+
 const deleteOrder = async (req, res) => {};
 
-module.exports = { getAllOrders, getOrder, addOrder, deleteOrder };
+module.exports = { getAllOrders, getOrder, addOrder, updateOrder, deleteOrder };
