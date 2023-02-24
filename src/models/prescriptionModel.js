@@ -24,12 +24,12 @@ const prescriptionSchema = new Schema({
     required: true,
   },
   quotedPrice: {
-    type: String,
+    type: Number,
     required: true,
   },
   isPriceAccepted: {
-    type: Boolean,
-    default: false,
+    type: String,
+    required: true,
   },
   billingAddress: {
     type: String,
@@ -40,7 +40,7 @@ const prescriptionSchema = new Schema({
     required: true,
   },
   paymentStatus: {
-    type: String,
+    type: Boolean,
     required: true,
   },
   deliveryStatus: {
@@ -53,7 +53,7 @@ const prescriptionSchema = new Schema({
   },
   failed: {
     type: Boolean,
-    default: false,
+    required: true,
   },
 });
 
