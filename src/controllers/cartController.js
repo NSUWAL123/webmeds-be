@@ -65,7 +65,6 @@ const removeCart = async (req, res) => {
   const removeCart = await Cart.findByIdAndDelete(req.params.id)
 
   res.json(removeCart)
-  // res.json("Item removed from Cart.")
 };
 
 // 4. Removes all cart items of a user

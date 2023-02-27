@@ -15,6 +15,10 @@ const prescriptionSchema = new Schema({
     type: String,
     required: true,
   },
+  doctorNMC: {
+    type: String,
+    required: true,
+  },
   medicines: {
     type: Array,
     required: true,

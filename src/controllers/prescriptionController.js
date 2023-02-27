@@ -3,10 +3,10 @@ const cloudinary = require("../utils/cloudinary");
 
 const uploadPrescription = async (req, res) => {
   const userId = req.user.id;
-  console.log(userId)
   const {
     prescriptionPicURL,
     doctorName,
+    doctorNMC,
     medicines,
     note,
     quotedPrice,
@@ -16,14 +16,11 @@ const uploadPrescription = async (req, res) => {
     deliveryStatus,
   } = req.body;
 
-  console.log("thik cha");
-
   //cloudinary image upload
   const uploadResponse = await cloudinary.uploader.upload(prescriptionPicURL, {
     upload_preset: "prescription-pic",
   });
 
-  console.log(uploadResponse);
   //extracting url from response
   const { url } = uploadResponse;
   const paymentStatus = false;
@@ -34,6 +31,7 @@ const uploadPrescription = async (req, res) => {
       userId,
       prescriptionPicURL: url,
       doctorName,
+      doctorNMC,
       medicines,
       note,
       quotedPrice,
@@ -54,4 +52,10 @@ const uploadPrescription = async (req, res) => {
   }
 };
 
-module.exports = { uploadPrescription };
+const getAllPrescriptionOrders = async (req, res) => {
+  const prescriptionOrder = await Prescription.find();
+  res.json(prescriptionOrder)
+
+}
+
+module.exports = { uploadPrescription, getAllPrescriptionOrders };
