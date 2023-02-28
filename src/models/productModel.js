@@ -54,6 +54,10 @@ const productSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  discontinued: {
+    type: String,
+    required: true,
+  }
 });
 
 module.exports = mongoose.model("product", productSchema);

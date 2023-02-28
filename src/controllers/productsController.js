@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 
 //returning all products
 const getAllProducts = async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.find({discontinued: false});
   res.json(products);
 };
 

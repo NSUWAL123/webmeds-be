@@ -2,7 +2,6 @@ const Product = require("../models/productModel");
 const cloudinary = require("../utils/cloudinary");
 
 const addProduct = async (req, res) => {
-
   //extracting all data from input fields
   const {
     pname,
@@ -51,6 +50,7 @@ const addProduct = async (req, res) => {
       expiry: expiry,
       productPicURL: url,
       description: description,
+      discontinued: false,
     });
 
     res.json({
@@ -63,7 +63,6 @@ const addProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-
   //extracting all data from input fields
   const {
     pname,
@@ -94,6 +93,7 @@ const updateProduct = async (req, res) => {
       stock: stock,
       expiry: expiry,
       description: description,
+      discontinued: false,
     });
 
     res.json({
@@ -106,11 +106,11 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
-  
+const deleteProduct = async (req, res) => { 
   //extracting id from body then searching & deleting from db
   const { id } = req.body;
-  const product = await Product.findByIdAndDelete(id);
+  // const product = await Product.findByIdAndDelete(id);
+  const product = await Product.findByIdAndUpdate(id, {discontinued: true})
 
   res.json({
     message: "Product Deleted successfully",
@@ -118,4 +118,15 @@ const deleteProduct = async (req, res) => {
   });
 };
 
-module.exports = { addProduct, updateProduct, deleteProduct };
+
+const updateProductQty = async (req, res) => {
+  const {id, qty} = req.body;
+
+  const product = await Product.findById(id);
+  let updatedStock = product.stock - qty;
+  const updatedQty = await Product.findByIdAndUpdate(id, {stock: updatedStock})
+
+  res.json("Qty changed.")
+}
+
+module.exports = { addProduct, updateProduct, deleteProduct, updateProductQty };
