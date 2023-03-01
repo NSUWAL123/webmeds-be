@@ -40,7 +40,7 @@ const productSchema = new Schema({
   },
   expiry: {
     type: Date,
-    required: true,
+    required: false,
   },
   productPicURL: {
     type: String,

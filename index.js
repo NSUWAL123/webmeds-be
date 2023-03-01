@@ -11,22 +11,10 @@ const noteRoutes = require("./src/routes/noteRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
 const orderRoutes = require("./src/routes/orderRoutes")
 const prescriptionRoutes = require("./src/routes/prescriptionRoutes")
+const categoryRoutes = require("./src/routes/categoryRoutes")
 
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
-
-//socket.io
-// const http = require("http");
-// const { Server } = require("socket.io");
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   //there are many problems related to cors in socket.io so we define cors
-//   cors: {
-//     origin: "http:/localhost:3000",
-//     methods: ["GET", "POST"],
-//   }
-// })
-
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
@@ -46,6 +34,7 @@ app.use("/notes", noteRoutes)
 app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/prescription", prescriptionRoutes)
+app.use("/category", categoryRoutes);
 
 // app.use("/chat", chatRoutes)
 

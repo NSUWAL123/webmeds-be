@@ -18,18 +18,6 @@ const getProductById = async (req, res) => {
   res.json(product);
 };
 
-const medicine = (req, res) => {
-  res.send("In medicines");
-};
-
-const baby = (req, res) => {
-  res.send("In baby");
-};
-
-const personalcare = (req, res) => {
-  res.send("In personalcare");
-};
-
 const searchProductInDB = async (req, res) => {
   const keyword = req.params.keyword.toLocaleLowerCase();
   
@@ -47,9 +35,6 @@ const searchProductInDB = async (req, res) => {
 
 module.exports = {
   getAllProducts,
-  medicine,
-  baby,
-  personalcare,
   getProductByName,
   getProductById,
   searchProductInDB,
