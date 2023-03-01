@@ -30,6 +30,21 @@ const personalcare = (req, res) => {
   res.send("In personalcare");
 };
 
+const searchProductInDB = async (req, res) => {
+  const keyword = req.params.keyword.toLocaleLowerCase();
+  
+  const product = await Product.find({discontinued: false});
+  let filteredProduct = []
+
+  for (let i = 0; i < product.length; i++) {
+    if (product[i].pname.toLocaleLowerCase().includes(keyword) && keyword.length >= 3) {
+      filteredProduct.push(product[i]);
+    }
+  }
+
+  res.json(filteredProduct);
+}
+
 module.exports = {
   getAllProducts,
   medicine,
@@ -37,4 +52,5 @@ module.exports = {
   personalcare,
   getProductByName,
   getProductById,
+  searchProductInDB,
 };

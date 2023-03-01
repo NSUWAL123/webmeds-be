@@ -7,6 +7,7 @@ const {
   baby,
   personalcare,
   getProductById,
+  searchProductInDB,
 } = require("../controllers/productsController");
 const authUser = require("../middlewares/authUser");
 
@@ -16,5 +17,7 @@ router.get("/id/:id", getProductById);
 router.get("/medicines", authUser, medicine);
 router.get("/baby", authUser, baby);
 router.get("/personalcare", personalcare);
+
+router.get("/search/:keyword", searchProductInDB)
 
 module.exports = router;

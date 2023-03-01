@@ -34,7 +34,7 @@ const signup = async (req, res) => {
     mobile: mobile,
     dob: dob,
     password: securePass,
-    billingAddress: ""
+    billingAddress: "",
   });
 
   const token = await Token.create({
@@ -141,8 +141,6 @@ const verifyToken = async (req, res) => {
     return;
   }
 
-  console.log(user);
-
   //updating verified status to true if user clicks verification link
   await User.findByIdAndUpdate(user._id, { verified: true });
 
@@ -151,41 +149,51 @@ const verifyToken = async (req, res) => {
 
   //then remove token from the db
   await token.remove();
-
   res.send("Email Verified Successfully.");
 };
 
-
-const getUser = async(req, res) => {
+const getUser = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.json(user);
-}
+};
 
 //update user details
-const updateUser = async(req, res) => {
+const updateUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user.id, {
     name: req.body.name,
     mobile: req.body.mobile,
-    billingAddress: req.body.billingAddress
-  })
+    billingAddress: req.body.billingAddress,
+  });
 
   res.json("User updated successfully.");
-}
+};
 
 const updateAddress = async (req, res) => {
   const address = await User.findByIdAndUpdate(req.user.id, {
-    billingAddress: req.body.billingAddress
-  })
+    billingAddress: req.body.billingAddress,
+  });
 
   res.json("Billing address updated successfully.");
-} 
+};
 
 //finding user by id
 const getUserById = async (req, res) => {
-  const user = await User.findById({_id: req.params.id})
+  const user = await User.findById({ _id: req.params.id });
   res.json(user);
+};
+
+// #. PASSWORD RESET
+const resetPassword = async (req, res) => {
+ 
 }
 
-
-
-module.exports = { signup, login, verifyToken, getUser, updateUser, updateAddress, getUserById };
+module.exports = {
+  signup,
+  login,
+  verifyToken,
+  getUser,
+  updateUser,
+  updateAddress,
+  getUserById,
+  resetPassword,
+};
