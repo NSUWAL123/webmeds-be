@@ -8,10 +8,9 @@ const getAllOrders = async (req, res) => {
 
 
 const getOrder = async (req, res) => {
- 
+  const order = await Order.find({userId: req.user.id})
+  res.json({order});
 };
-
-
 
 const addOrder = async (req, res) => {
   const userId = req.user.id;
