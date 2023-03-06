@@ -12,6 +12,7 @@ const cartRoutes = require("./src/routes/cartRoutes");
 const orderRoutes = require("./src/routes/orderRoutes")
 const prescriptionRoutes = require("./src/routes/prescriptionRoutes")
 const categoryRoutes = require("./src/routes/categoryRoutes")
+const paymentRoutes = require("./src/routes/paymentRoutes")
 
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
@@ -35,6 +36,7 @@ app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/prescription", prescriptionRoutes)
 app.use("/category", categoryRoutes);
+app.use("/payment", paymentRoutes);
 
 // app.use("/chat", chatRoutes)
 

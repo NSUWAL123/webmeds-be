@@ -29,6 +29,10 @@ const addOrder = async (req, res) => {
 
   console.log( userId, orderTotal)
 
+  if (paymentType === 'khalti') {
+    
+  }
+
   const response = await Order.create({
     userId,
     orderTotal,
