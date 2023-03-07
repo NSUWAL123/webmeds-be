@@ -54,8 +54,33 @@ const uploadPrescription = async (req, res) => {
 
 const getAllPrescriptionOrders = async (req, res) => {
   const prescriptionOrder = await Prescription.find();
-  res.json(prescriptionOrder)
+  res.json(prescriptionOrder);
+};
 
-}
+const getPrescriptionById = async (id) => {
+  const prescriptionOrder = await Prescription.findById(id);
+  return prescriptionOrder;
+};
 
-module.exports = { uploadPrescription, getAllPrescriptionOrders };
+const getPrescriptionByUser = async (req, res) => {
+  const prescription = await Prescription.find({ userId: req.user.id });
+  res.json(prescription);
+};
+
+const updateStatus = async (req, res) => {
+  const prescription = await getPrescriptionById(req.body.id);
+  const updatedPrescription = { ...prescription, ...req.body };
+
+  const prescriptionOrder = await Prescription.findByIdAndUpdate(
+    updatedPrescription._id,
+    updatedPrescription
+  );
+  res.json(prescriptionOrder);
+};
+
+module.exports = {
+  uploadPrescription,
+  getAllPrescriptionOrders,
+  updateStatus,
+  getPrescriptionByUser,
+};
