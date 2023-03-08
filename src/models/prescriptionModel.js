@@ -59,6 +59,10 @@ const prescriptionSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  }
 });
 
 module.exports = mongoose.model("prescription", prescriptionSchema);
