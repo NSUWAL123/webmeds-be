@@ -1,3 +1,4 @@
+const { findByIdAndUpdate } = require("../models/prescriptionModel");
 const Prescription = require("../models/prescriptionModel");
 const cloudinary = require("../utils/cloudinary");
 
@@ -78,10 +79,18 @@ const updateStatus = async (req, res) => {
   res.json(prescriptionOrder);
 };
 
+const initiateOrder = async (req, res) => {
+  const order = req.body; 
+  console.log("prescriptionid: " + order._id)
+  const initiateOrder = await Prescription.findByIdAndUpdate(order._id, order)
+  // res.json(initiateOrder);
+}
+
 module.exports = {
   uploadPrescription,
   getAllPrescriptionOrders,
   updateStatus,
   getPrescriptionByUser,
   getPrescriptionById,
+  initiateOrder
 };
