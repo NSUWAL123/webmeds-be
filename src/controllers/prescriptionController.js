@@ -83,7 +83,7 @@ const initiateOrder = async (req, res) => {
   const order = req.body; 
   console.log("prescriptionid: " + order._id)
   const initiateOrder = await Prescription.findByIdAndUpdate(order._id, order)
-  // res.json(initiateOrder);
+  res.json(initiateOrder);
 }
 
 module.exports = {

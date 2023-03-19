@@ -8,6 +8,6 @@ router.get('/getAllPrescriptionOrders', getAllPrescriptionOrders);
 router.get('/getPrescriptionByUser', authUser, getPrescriptionByUser);
 router.get('/getPrescriptionById/:id', getPrescriptionById)
 router.put('/updateStatus', updateStatus);
-router.put('/initiateOrder', authUser, initiateOrder);
+router.post('/initiateOrder', authUser, initiateOrder);
 
 module.exports = router;
