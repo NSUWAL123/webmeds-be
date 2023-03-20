@@ -117,6 +117,7 @@ const login = async (req, res) => {
     message: "Successfully Logged In.",
     lvl: "success",
     data: authtoken,
+    role: user.role
   });
 };
 
