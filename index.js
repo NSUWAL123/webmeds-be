@@ -9,10 +9,11 @@ const adminRoutes = require("./src/routes/adminRoutes");
 const productRoutes = require("./src/routes/productRoutes");
 const noteRoutes = require("./src/routes/noteRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
-const orderRoutes = require("./src/routes/orderRoutes")
-const prescriptionRoutes = require("./src/routes/prescriptionRoutes")
-const categoryRoutes = require("./src/routes/categoryRoutes")
-const paymentRoutes = require("./src/routes/paymentRoutes")
+const orderRoutes = require("./src/routes/orderRoutes");
+const prescriptionRoutes = require("./src/routes/prescriptionRoutes");
+const categoryRoutes = require("./src/routes/categoryRoutes");
+const paymentRoutes = require("./src/routes/paymentRoutes");
+const dashboardRoutes = require("./src/routes/dashboardRoutes");
 
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
@@ -37,6 +38,7 @@ app.use("/order", orderRoutes)
 app.use("/prescription", prescriptionRoutes)
 app.use("/category", categoryRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 // app.use("/chat", chatRoutes)
 
