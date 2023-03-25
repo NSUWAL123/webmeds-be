@@ -10,6 +10,7 @@ const getDetails = async (req, res) => {
     ordersFulfilled: 0,
     prescriptionsFulfilled: 0,
     failedDeliveries: 0,
+    totalCustomers: 0,
   };
 
   //ORDER REVENUE
@@ -27,7 +28,9 @@ const getDetails = async (req, res) => {
   //PRESCRIPTION ORDER REVENUE
   const prescriptions = await Prescription.find();
   const filteredPrescriptions = prescriptions.filter(
-    (prescription) => prescription.date.toJSON().slice(0, 7) === duration && prescription.deliveryStatus === "delivered"
+    (prescription) =>
+      prescription.date.toJSON().slice(0, 7) === duration &&
+      prescription.deliveryStatus === "delivered"
   );
   figures.prescriptionTotal = filteredPrescriptions.reduce(
     (total, prescription) => total + prescription.quotedPrice,
@@ -47,8 +50,23 @@ const getDetails = async (req, res) => {
   );
 
   //FAILED DELIVERIES
+  const failedDeliveries = filteredOrders.filter(
+    (fo) => fo.deliveryStatus === "failed"
+  );
+  figures.failedDeliveries = failedDeliveries.length;
+
+  //TOTAL CUSTOMERS
+  let customers = [];
+  let ord = filteredOrders.map((fo) => customers.push(fo.userId.toString()));
+  let pres = filteredPrescriptions.map((fo) => customers.push(fo.userId.toString()));
+
+  const uniqueCustomer = [...new Set(customers)]
+  figures.totalCustomers = uniqueCustomer.length;
+  // console.log(customers)
+  // console.log(uniqueCustomer.length);
 
   console.log(figures);
+  res.json(figures);
 };
 
 module.exports = { getDetails };
