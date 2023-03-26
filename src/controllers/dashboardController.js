@@ -1,5 +1,6 @@
 const Order = require("../models/orderModal");
 const Prescription = require("../models/prescriptionModel");
+const Product = require("../models/productModel");
 
 const getDetails = async (req, res) => {
   const duration = req.params.duration;
@@ -11,6 +12,8 @@ const getDetails = async (req, res) => {
     prescriptionsFulfilled: 0,
     failedDeliveries: 0,
     totalCustomers: 0,
+    products: [],
+    // topSelling: {}
   };
 
   //ORDER REVENUE
@@ -58,12 +61,37 @@ const getDetails = async (req, res) => {
   //TOTAL CUSTOMERS
   let customers = [];
   let ord = filteredOrders.map((fo) => customers.push(fo.userId.toString()));
-  let pres = filteredPrescriptions.map((fo) => customers.push(fo.userId.toString()));
+  let pres = filteredPrescriptions.map((fo) =>
+    customers.push(fo.userId.toString())
+  );
 
-  const uniqueCustomer = [...new Set(customers)]
+  const uniqueCustomer = [...new Set(customers)];
   figures.totalCustomers = uniqueCustomer.length;
-  // console.log(customers)
-  // console.log(uniqueCustomer.length);
+
+  //TOP SELLING PRODUCTS
+  const orderlines = [];
+  filteredOrders.map((ord) => {
+    ord.orderLine.map(async (ordLine) => {
+      orderlines.push({
+        pid: ordLine.productId,
+        pqty: ordLine.quantity,
+      });
+    });
+  });
+
+  const outputObj = orderlines.reduce((acc, curr) => {
+    if (acc[curr.pid]) {
+      acc[curr.pid] += curr.pqty;
+    } else {
+      acc[curr.pid] = curr.pqty;
+    }
+    return acc;
+  }, {});
+  
+  const outputArray = Object.keys(outputObj).map(pid => ({ pid, pqty: outputObj[pid] }));
+
+  figures.products = outputArray.sort((a, b) => b.pqty - a.pqty);
+  console.log(figures.products);
 
   console.log(figures);
   res.json(figures);
