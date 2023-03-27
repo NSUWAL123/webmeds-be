@@ -117,7 +117,7 @@ const login = async (req, res) => {
     message: "Successfully Logged In.",
     lvl: "success",
     data: authtoken,
-    role: user.role
+    role: user.role,
   });
 };
 
@@ -180,13 +180,57 @@ const updateAddress = async (req, res) => {
 //finding user by id
 const getUserById = async (req, res) => {
   const user = await User.findById({ _id: req.params.id });
+  console.log(user);
   res.json(user);
 };
 
-// #. PASSWORD RESET
+// #. PASSWORD RESET REQUEST
 const resetPassword = async (req, res) => {
- 
-}
+  console.log(req.body.email)
+  const user = await User.findOne({email: req.body.email});
+  console.log(user)
+  if (!user) {
+    res.json({
+      message:
+        "Please enter a valid email address.",
+      lvl: "warning",
+      data: "",
+    });
+    return;
+  }
+
+  const isTokenInDB = await Token.findOne({userId: user._id});
+  console.log(isTokenInDB)
+  if (isTokenInDB) {
+    res.json({
+      message:
+        "Verification Link already sent to your Email.",
+      lvl: "danger",
+      data: "",
+    });
+    return;
+  }
+  console.log(user._id)
+
+  const token = await Token.create({
+    userId: user._id,
+    token: crypto.randomBytes(32).toString("hex"),
+  });
+
+
+  const url = `${process.env.BASE_URL}password/reset/${user._id}/${token.token}`;
+  sendMail(user.email, "Reset Password", url);
+  res.json({
+    message:
+      "An link to reset your password has been sent to your Email. Please check your Email.",
+    lvl: "info",
+    data: "",
+  });
+
+  
+  // PASSWORD RESET LINK
+
+};
 
 module.exports = {
   signup,

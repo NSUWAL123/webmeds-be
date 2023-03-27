@@ -10,7 +10,7 @@ router.get("/getUser", authUser, getUser);
 router.post("/update", authUser, updateUser);
 router.post("/update-address", authUser, updateAddress);
 router.get("/getUserById/:id", getUserById);
-router.get("/:id/reset-password/:token", resetPassword);
+router.post("/reset-password/", resetPassword);
 
 
 
