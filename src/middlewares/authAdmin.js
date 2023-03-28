@@ -3,9 +3,7 @@ const User = require("../models/userModel");
 
 const authAdmin = async (req, res, next) => {
   const authtoken = req.header("auth-token");
-  console.log("authtoken ayo");
   if (!authtoken) {
-    console.log("token ta chaina ta");
     res.send("Please authenticate using a valid token.");
     return;
   }
@@ -19,7 +17,6 @@ const authAdmin = async (req, res, next) => {
     next();
   } catch (error) {
     res.send("Please authenticate using a valid token2.");
-    console.log(error);
   }
 };
 

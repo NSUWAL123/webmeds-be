@@ -18,7 +18,7 @@ const signup = async (req, res) => {
 
   if (isUserInDB) {
     res.json({
-      message: "User with this email already exits.",
+      message: "User with this email already exists.",
       lvl: "error",
       data: "",
     });
@@ -180,43 +180,41 @@ const updateAddress = async (req, res) => {
 //finding user by id
 const getUserById = async (req, res) => {
   const user = await User.findById({ _id: req.params.id });
-  console.log(user);
   res.json(user);
 };
 
 // #. PASSWORD RESET REQUEST
 const resetPassword = async (req, res) => {
-  console.log(req.body.email)
-  const user = await User.findOne({email: req.body.email});
-  console.log(user)
+  /** 
+   *  1. Find is the entered email address matches with any of the user.
+   *  2. Is user present, find if any token is associated with the user or not, if yes, send message.
+   *  3. Then create a token.
+   *  4. Then, combine the userid & token => /userid/token, then it to user via email.
+  */
+  const user = await User.findOne({ email: req.body.email });
   if (!user) {
     res.json({
-      message:
-        "Please enter a valid email address.",
+      message: "Please enter a valid email address.",
       lvl: "warning",
       data: "",
     });
     return;
   }
 
-  const isTokenInDB = await Token.findOne({userId: user._id});
-  console.log(isTokenInDB)
+  const isTokenInDB = await Token.findOne({ userId: user._id });
   if (isTokenInDB) {
     res.json({
-      message:
-        "Verification Link already sent to your Email.",
+      message: "Verification Link already sent to your Email.",
       lvl: "danger",
       data: "",
     });
     return;
   }
-  console.log(user._id)
 
   const token = await Token.create({
     userId: user._id,
     token: crypto.randomBytes(32).toString("hex"),
   });
-
 
   const url = `${process.env.BASE_URL}password/reset/${user._id}/${token.token}`;
   sendMail(user.email, "Reset Password", url);
@@ -226,10 +224,45 @@ const resetPassword = async (req, res) => {
     lvl: "info",
     data: "",
   });
+};
 
-  
-  // PASSWORD RESET LINK
+// FIND TOKEN IN DB
+const findTokenInDB = async (req, res) => {
+  const isTokenInDB = await Token.findOne({ token: req.params.token });
+  if (!isTokenInDB) {
+    res.json({
+      tokenInDB: false,
+    });
+    return;
+  }
+  res.json({
+    tokenInDB: true,
+  });
+};
 
+// PASSWORD RESET LINK
+const updatePassword = async (req, res) => {
+  const { userId, password, token } = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const securePass = await bcrypt.hash(password, salt);
+
+  const changePassword = await User.findByIdAndUpdate(userId, {
+    password: securePass,
+  });
+  const removeToken = await Token.remove({ token: token });
+
+  const user = await User.findById(userId);
+  sendMail(user.email, "Password Reset Successful", 
+  `<div>Hello ${user.name},</div>
+  <div>Your password has been changed. Kindly login with the new credentials.</div>
+  <div>Thankyou,</div> 
+  <div>Webmeds Nepal</div>
+  `
+  );
+  res.json({
+    lvl: "success",
+    message: "Successfully updated your password.",
+  });
 };
 
 module.exports = {
@@ -241,4 +274,6 @@ module.exports = {
   updateAddress,
   getUserById,
   resetPassword,
+  updatePassword,
+  findTokenInDB,
 };

@@ -91,9 +91,6 @@ const getDetails = async (req, res) => {
   const outputArray = Object.keys(outputObj).map(pid => ({ pid, pqty: outputObj[pid] }));
 
   figures.products = outputArray.sort((a, b) => b.pqty - a.pqty);
-  console.log(figures.products);
-
-  console.log(figures);
   res.json(figures);
 };
 

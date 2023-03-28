@@ -58,7 +58,6 @@ const addProduct = async (req, res) => {
       lvl: "success",
     });
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -102,7 +101,6 @@ const updateProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
   }
 };
 

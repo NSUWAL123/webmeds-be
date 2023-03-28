@@ -13,7 +13,6 @@ const authUser = (req, res, next) => {
     next();
   } catch (error) {
     res.send("Please authenticate using a valid token2.");
-    console.log(error);
   }
 };
 

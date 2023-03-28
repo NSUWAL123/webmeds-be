@@ -49,7 +49,6 @@ const uploadPrescription = async (req, res) => {
       data: prescription,
     });
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -70,7 +69,6 @@ const getPrescriptionByUser = async (req, res) => {
 
 const updateStatus = async (req, res) => {
   const updatedPrescription = req.body;
-  console.log(req.body);
 
   const prescriptionOrder = await Prescription.findByIdAndUpdate(
     updatedPrescription._id,
@@ -81,7 +79,6 @@ const updateStatus = async (req, res) => {
 
 const initiateOrder = async (req, res) => {
   const order = req.body; 
-  console.log("prescriptionid: " + order._id)
   const initiateOrder = await Prescription.findByIdAndUpdate(order._id, order)
   res.json(initiateOrder);
 }

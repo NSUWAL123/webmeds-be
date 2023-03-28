@@ -27,8 +27,6 @@ const addOrder = async (req, res) => {
     deliveryStatus,
   } = req.body;
 
-  console.log( userId, orderTotal)
-
   if (paymentType === 'khalti') {
     
   }

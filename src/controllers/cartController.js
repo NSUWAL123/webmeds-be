@@ -61,7 +61,6 @@ const toggleCheck = async (req, res) => {
 
 // 3. Removes an individual cart item
 const removeCart = async (req, res) => {
-  console.log("paye")
   const removeCart = await Cart.findByIdAndDelete(req.params.id)
 
   res.json(removeCart)

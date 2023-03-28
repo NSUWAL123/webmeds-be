@@ -11,7 +11,6 @@ const getAllNotes = async (req, res) => {
 const addNotes = async (req, res) => {
   const userId = req.user.id;
   const { title, description } = req.body;
-  console.log(userId, title, description);
 
   const newNote = await Note.create({
     userId: userId,
