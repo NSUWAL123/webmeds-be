@@ -14,6 +14,7 @@ const prescriptionRoutes = require("./src/routes/prescriptionRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 const dashboardRoutes = require("./src/routes/dashboardRoutes");
+const dealRoutes = require("./src/routes/dealRoutes");
 
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
@@ -39,6 +40,7 @@ app.use("/prescription", prescriptionRoutes)
 app.use("/category", categoryRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/deals", dealRoutes)
 
 // app.use("/chat", chatRoutes)
 
