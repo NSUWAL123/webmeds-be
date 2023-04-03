@@ -3,9 +3,6 @@ const router = express.Router();
 const {
   getAllProducts,
   getProductByName,
-  medicine,
-  baby,
-  personalcare,
   getProductById,
   searchProductInDB,
 } = require("../controllers/productsController");

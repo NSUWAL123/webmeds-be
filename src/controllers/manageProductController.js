@@ -28,7 +28,6 @@ const addProduct = async (req, res) => {
       });
       return;
     }
-
     //cloudinary image upload
     const uploadResponse = await cloudinary.uploader.upload(previewSource, {
       upload_preset: "product-pic",

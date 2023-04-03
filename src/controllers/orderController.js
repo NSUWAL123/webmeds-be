@@ -1,15 +1,16 @@
 const Order = require("../models/orderModal");
+const User = require("../models/userModel");
+const { sendMail } = require("../utils/email");
 
 // 1. returns all the orders who's state is not delivered
 const getAllOrders = async (req, res) => {
   const response = await Order.find();
-  res.json(response)
-}
-
+  res.json(response);
+};
 
 const getOrder = async (req, res) => {
-  const order = await Order.find({userId: req.user.id})
-  res.json({order});
+  const order = await Order.find({ userId: req.user.id });
+  res.json({ order });
 };
 
 const addOrder = async (req, res) => {
@@ -27,8 +28,7 @@ const addOrder = async (req, res) => {
     deliveryStatus,
   } = req.body;
 
-  if (paymentType === 'khalti') {
-    
+  if (paymentType === "khalti") {
   }
 
   const response = await Order.create({
@@ -45,20 +45,56 @@ const addOrder = async (req, res) => {
     deliveryStatus,
   });
 
+  const { name, email } = await User.findById(userId);
+  console.log(email);
+  sendMail(
+    email,
+    "Order Placed Successfully",
+    `<div>Hello ${name},</div>
+  <div>Your order of order id <b>${response._id}</b> of has been successfully placed.</div>
+  <div>Grand total: ${grandTotal}</div>
+  <div>Total Items: ${totalItems}</div>
+  <div>Billing Address: ${billingAddress}</div>
+  <div>Thankyou,</div> 
+  <div>Webmeds Nepal</div>
+  `
+  );
+
   res.json({
     data: response,
-    message: "Order Successful"
-  })
+    message: "Order Successful",
+  });
 };
 
 const updateOrder = async (req, res) => {
-  const {id, deliveryStatus} = req.body;
+  const { id, deliveryStatus } = req.body;
 
-  const orderUpdate = await Order.findByIdAndUpdate(id, {deliveryStatus: deliveryStatus})
+  const orderUpdate = await Order.findByIdAndUpdate(id, {
+    deliveryStatus: deliveryStatus,
+  });
+
+  const { userId, grandTotal, totalItems, billingAddress } = orderUpdate;
+  const { name, email } = await User.findById(userId);
+
+  if (deliveryStatus === "ofd" || deliveryStatus === "delivered") {
+    sendMail(
+      email,
+      `${deliveryStatus==="ofd" ? "Your order is on the way" : "Your order has been delivered"}`,
+      `<div>Hello ${name},</div>
+    <div>Your order of order id <b>${id}</b> ${deliveryStatus==="ofd" ? "is out for delivery" : "has been delivered."}.</div>
+    <div>Grand total: ${grandTotal}</div>
+    <div>Total Items: ${totalItems}</div>
+    <div>Billing Address: ${billingAddress}</div>
+    <div>Thankyou,</div> 
+    <div>Webmeds Nepal</div>
+    `
+    );
+  }
+
   res.json({
     message: "Order status changed.",
     data: orderUpdate,
-  })
+  });
 };
 
 const deleteOrder = async (req, res) => {};
