@@ -1,6 +1,8 @@
 const { findByIdAndUpdate } = require("../models/prescriptionModel");
 const Prescription = require("../models/prescriptionModel");
+const User = require("../models/userModel");
 const cloudinary = require("../utils/cloudinary");
+const { sendMail } = require("../utils/email");
 
 const uploadPrescription = async (req, res) => {
   const userId = req.user.id;
@@ -44,12 +46,24 @@ const uploadPrescription = async (req, res) => {
       failed,
     });
 
+    const { name, email } = await User.findById(userId);
+
+    sendMail(
+      email,
+      "Prescription order placed successfully",
+      `<div>Hello ${name},</div>
+    <div>Your prescrition order of order id <b>${prescription._id}</b> has been placed.</div>
+    <div>Billing Address: ${billingAddress}</div>
+    <div>Thankyou,</div> 
+    <div>Webmeds Nepal</div>
+    `
+    );
+
     res.json({
       message: "Prescription Uploaded Successfully.",
       data: prescription,
     });
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 const getAllPrescriptionOrders = async (req, res) => {
@@ -70,18 +84,51 @@ const getPrescriptionByUser = async (req, res) => {
 const updateStatus = async (req, res) => {
   const updatedPrescription = req.body;
 
+  const isPrescriptionQuoted = await Prescription.findById(updatedPrescription._id);
+  const {name, email, _id} = await User.findById(isPrescriptionQuoted.userId)
+
+  if (isPrescriptionQuoted.quotedPrice === 0) {
+    sendMail(
+      email,
+      "Prescription Quotation",
+      `<div>Hello ${name},</div>
+    <div>The quoted price for your prescription order of order id <b>${_id}</b> is as follows.</div>
+    <div>Grand total: ${updatedPrescription.quotedPrice}</div>
+    <div>Billing Address: ${updatedPrescription.billingAddress}</div>
+    <div>Thankyou,</div> 
+    <div>Webmeds Nepal</div>
+    `
+    )
+  }
+
   const prescriptionOrder = await Prescription.findByIdAndUpdate(
     updatedPrescription._id,
     updatedPrescription
   );
+
+  console.log(prescriptionOrder)
+
+  if (updatedPrescription.deliveryStatus === "ofd" || updatedPrescription.deliveryStatus === "delivered") {
+    sendMail(
+      email,
+      `${updatedPrescription.deliveryStatus==="ofd" ? "Your order is on the way" : "Your order has been delivered"}`,
+      `<div>Hello ${name},</div>
+    <div>Your prescription order of order id <b>${updatedPrescription._id}</b> ${updatedPrescription.deliveryStatus==="ofd" ? "is out for delivery" : "has been delivered."}.</div>
+    <div>Grand total: ${updatedPrescription.quotedPrice}</div>
+    <div>Billing Address: ${updatedPrescription.billingAddress}</div>
+    <div>Thankyou,</div> 
+    <div>Webmeds Nepal</div>
+    `
+    );
+  }
   res.json(prescriptionOrder);
 };
 
 const initiateOrder = async (req, res) => {
-  const order = req.body; 
-  const initiateOrder = await Prescription.findByIdAndUpdate(order._id, order)
+  const order = req.body;
+  const initiateOrder = await Prescription.findByIdAndUpdate(order._id, order);
   res.json(initiateOrder);
-}
+};
 
 module.exports = {
   uploadPrescription,
@@ -89,5 +136,5 @@ module.exports = {
   updateStatus,
   getPrescriptionByUser,
   getPrescriptionById,
-  initiateOrder
+  initiateOrder,
 };
