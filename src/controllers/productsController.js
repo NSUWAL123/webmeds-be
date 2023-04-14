@@ -18,6 +18,8 @@ const getProductById = async (req, res) => {
   res.json(product);
 };
 
+
+// RETURN SEARCHED KEYWORD
 const searchProductInDB = async (req, res) => {
   const keyword = req.params.keyword.toLocaleLowerCase();
   

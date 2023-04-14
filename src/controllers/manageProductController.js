@@ -60,6 +60,7 @@ const addProduct = async (req, res) => {
   }
 };
 
+// UPDATE PRODUCT
 const updateProduct = async (req, res) => {
   //extracting all data from input fields
   const {
@@ -103,6 +104,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// DELETE PRODUCT
 const deleteProduct = async (req, res) => { 
   //extracting id from body then searching & deleting from db
   const { id } = req.body;

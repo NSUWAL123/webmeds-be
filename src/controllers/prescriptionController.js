@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const cloudinary = require("../utils/cloudinary");
 const { sendMail } = require("../utils/email");
 
+// UPLOAD PRESCRIPTION
 const uploadPrescription = async (req, res) => {
   const userId = req.user.id;
   const {

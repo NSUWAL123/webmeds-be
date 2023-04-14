@@ -13,6 +13,7 @@ const getOrder = async (req, res) => {
   res.json({ order });
 };
 
+// INITIATES ORDER
 const addOrder = async (req, res) => {
   const userId = req.user.id;
   const {
@@ -66,6 +67,7 @@ const addOrder = async (req, res) => {
   });
 };
 
+// UPDATE ORDER STATUS
 const updateOrder = async (req, res) => {
   const { id, deliveryStatus } = req.body;
 
@@ -97,6 +99,7 @@ const updateOrder = async (req, res) => {
   });
 };
 
+//DELETE ORDER
 const deleteOrder = async (req, res) => {};
 
 module.exports = { getAllOrders, getOrder, addOrder, updateOrder, deleteOrder };

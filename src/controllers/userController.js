@@ -158,7 +158,7 @@ const getUser = async (req, res) => {
   res.json(user);
 };
 
-//update user details
+//UPDATE USER DETAILS
 const updateUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user.id, {
     name: req.body.name,
@@ -217,7 +217,13 @@ const resetPassword = async (req, res) => {
   });
 
   const url = `${process.env.BASE_URL}password/reset/${user._id}/${token.token}`;
-  sendMail(user.email, "Reset Password", url);
+  sendMail(user.email, "Reset Password",  `<div>Hello ${user.name},</div>
+  <div>Here is the link for your password reset.</div>
+  <div>Link: ${url}</div>
+  <div><b>PS: </b>Do not share this link with anyone.</div>
+  <div>Thankyou,</div> 
+  <div>Webmeds Nepal</div>
+  `);
   res.json({
     message:
       "An link to reset your password has been sent to your Email. Please check your Email.",

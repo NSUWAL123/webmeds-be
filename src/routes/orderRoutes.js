@@ -7,7 +7,6 @@ const router = express.Router();
 //admin
 router.get('/getAllOrders', getAllOrders)
 router.put('/updateOrder', authAdmin, updateOrder);
-
 router.get('/getOrder', authUser, getOrder);
 router.post('/addOrder', authUser, addOrder);
 router.get('/deleteOrder', authUser, deleteOrder);
