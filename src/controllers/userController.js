@@ -42,7 +42,7 @@ const signup = async (req, res) => {
     token: crypto.randomBytes(32).toString("hex"),
   });
 
-  const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
+  const url = `${process.env.BASE_URL}/user/${user._id}/verify/${token.token}`;
   sendMail(user.email, "Verify Email", url);
 
   res.json({
@@ -94,7 +94,7 @@ const login = async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       });
 
-      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
+      const url = `${process.env.BASE_URL}/users/${user._id}/verify/${token.token}`;
       sendMail(user.email, "Verify Email", url);
     }
     res.json({
@@ -216,7 +216,7 @@ const resetPassword = async (req, res) => {
     token: crypto.randomBytes(32).toString("hex"),
   });
 
-  const url = `${process.env.BASE_URL}password/reset/${user._id}/${token.token}`;
+  const url = `${process.env.BASE_URL}/password/reset/${user._id}/${token.token}`;
   sendMail(user.email, "Reset Password",  `<div>Hello ${user.name},</div>
   <div>Here is the link for your password reset.</div>
   <div>Link: ${url}</div>
