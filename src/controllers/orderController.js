@@ -81,9 +81,15 @@ const updateOrder = async (req, res) => {
   if (deliveryStatus === "ofd" || deliveryStatus === "delivered") {
     sendMail(
       email,
-      `${deliveryStatus==="ofd" ? "Your order is on the way" : "Your order has been delivered"}`,
+      `${
+        deliveryStatus === "ofd"
+          ? "Your order is on the way"
+          : "Your order has been delivered"
+      }`,
       `<div>Hello ${name},</div>
-    <div>Your order of order id <b>${id}</b> ${deliveryStatus==="ofd" ? "is out for delivery" : "has been delivered."}.</div>
+    <div>Your order of order id <b>${id}</b> ${
+        deliveryStatus === "ofd" ? "is out for delivery" : "has been delivered."
+      }.</div>
     <div>Grand total: ${grandTotal}</div>
     <div>Total Items: ${totalItems}</div>
     <div>Billing Address: ${billingAddress}</div>
@@ -99,7 +105,17 @@ const updateOrder = async (req, res) => {
   });
 };
 
-//DELETE ORDER
-const deleteOrder = async (req, res) => {};
+//DELETE ORDER (Cancel or Decline the Order)
+const deleteOrder = async (req, res) => {
+  console.log(req.params.id);
+  const deleteOrd = await Order.findByIdAndUpdate(req.params.id, {
+    failed: true,
+  });
+
+  res.json({
+    message: "Order Declined",
+    lvl: "success",
+  });
+};
 
 module.exports = { getAllOrders, getOrder, addOrder, updateOrder, deleteOrder };

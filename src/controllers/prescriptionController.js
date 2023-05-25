@@ -85,8 +85,10 @@ const getPrescriptionByUser = async (req, res) => {
 const updateStatus = async (req, res) => {
   const updatedPrescription = req.body;
 
-  const isPrescriptionQuoted = await Prescription.findById(updatedPrescription._id);
-  const {name, email, _id} = await User.findById(isPrescriptionQuoted.userId)
+  const isPrescriptionQuoted = await Prescription.findById(
+    updatedPrescription._id
+  );
+  const { name, email, _id } = await User.findById(isPrescriptionQuoted.userId);
 
   if (isPrescriptionQuoted.quotedPrice === 0) {
     sendMail(
@@ -99,7 +101,7 @@ const updateStatus = async (req, res) => {
     <div>Thankyou,</div> 
     <div>Webmeds Nepal</div>
     `
-    )
+    );
   }
 
   const prescriptionOrder = await Prescription.findByIdAndUpdate(
@@ -107,14 +109,27 @@ const updateStatus = async (req, res) => {
     updatedPrescription
   );
 
-  console.log(prescriptionOrder)
+  console.log(prescriptionOrder);
 
-  if (updatedPrescription.deliveryStatus === "ofd" || updatedPrescription.deliveryStatus === "delivered") {
+  if (
+    updatedPrescription.deliveryStatus === "ofd" ||
+    updatedPrescription.deliveryStatus === "delivered"
+  ) {
     sendMail(
       email,
-      `${updatedPrescription.deliveryStatus==="ofd" ? "Your order is on the way" : "Your order has been delivered"}`,
+      `${
+        updatedPrescription.deliveryStatus === "ofd"
+          ? "Your order is on the way"
+          : "Your order has been delivered"
+      }`,
       `<div>Hello ${name},</div>
-    <div>Your prescription order of order id <b>${updatedPrescription._id}</b> ${updatedPrescription.deliveryStatus==="ofd" ? "is out for delivery" : "has been delivered."}.</div>
+    <div>Your prescription order of order id <b>${
+      updatedPrescription._id
+    }</b> ${
+        updatedPrescription.deliveryStatus === "ofd"
+          ? "is out for delivery"
+          : "has been delivered."
+      }.</div>
     <div>Grand total: ${updatedPrescription.quotedPrice}</div>
     <div>Billing Address: ${updatedPrescription.billingAddress}</div>
     <div>Thankyou,</div> 
@@ -131,6 +146,19 @@ const initiateOrder = async (req, res) => {
   res.json(initiateOrder);
 };
 
+//DELETE PRESCRIPTION ORDER (Cancel or Decline the Order)
+const deletePrescriptionOrder = async (req, res) => {
+  console.log(req.params.id);
+  const deleteOrd = await Prescription.findByIdAndUpdate(req.params.id, {
+    failed: true,
+  });
+
+  res.json({
+    message: "Order Declined",
+    lvl: "success",
+  });
+};
+
 module.exports = {
   uploadPrescription,
   getAllPrescriptionOrders,
@@ -138,4 +166,5 @@ module.exports = {
   getPrescriptionByUser,
   getPrescriptionById,
   initiateOrder,
+  deletePrescriptionOrder,
 };

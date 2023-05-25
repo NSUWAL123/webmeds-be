@@ -53,10 +53,15 @@ const getDetails = async (req, res) => {
   );
 
   //FAILED DELIVERIES
-  const failedDeliveries = filteredOrders.filter(
-    (fo) => fo.deliveryStatus === "failed"
+  const failedOrdDeliveries = orders.filter(
+    (fo) => fo.date.toJSON().slice(0, 7) === duration && fo.failed === true
   );
-  figures.failedDeliveries = failedDeliveries.length;
+  const failedPresDeliveries = prescriptions.filter(
+    (fo) => fo.date.toJSON().slice(0, 7) === duration && fo.failed === true
+  );
+  figures.failedDeliveries =
+    failedOrdDeliveries.length + failedPresDeliveries.length;
+  console.log(failedPresDeliveries);
 
   //TOTAL CUSTOMERS
   let customers = [];
@@ -87,8 +92,11 @@ const getDetails = async (req, res) => {
     }
     return acc;
   }, {});
-  
-  const outputArray = Object.keys(outputObj).map(pid => ({ pid, pqty: outputObj[pid] }));
+
+  const outputArray = Object.keys(outputObj).map((pid) => ({
+    pid,
+    pqty: outputObj[pid],
+  }));
 
   figures.products = outputArray.sort((a, b) => b.pqty - a.pqty);
   res.json(figures);
