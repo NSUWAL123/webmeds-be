@@ -1,7 +1,13 @@
-// const express = require('express');
-// const authUser = require("../middlewares/authUser");
-// const router = express.Router();
+const express = require("express");
+const {
+  getAllChats,
+  getChatByUserId,
+  postMessage,
+} = require("../controllers/chatController");
+const router = express.Router();
 
-// router.post('/', authUser, accessChat);
-// router.get('/', authUser, fetchChats);
-// //no group
+router.get("/", getAllChats);
+router.get("/:id", getChatByUserId);
+router.post("/:id", postMessage);
+
+module.exports = router;

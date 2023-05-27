@@ -15,6 +15,7 @@ const categoryRoutes = require("./src/routes/categoryRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 const dashboardRoutes = require("./src/routes/dashboardRoutes");
 const dealRoutes = require("./src/routes/dealRoutes");
+const chatRoutes = require("./src/routes/chatRoutes");
 
 const { notFoundHandler } = require("./src/middlewares/notFound");
 const { errorHandler } = require("./src/middlewares/error");
@@ -33,17 +34,17 @@ app.get("/", (req, res) => {
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
-app.use("/notes", noteRoutes)
-app.use("/cart", cartRoutes)
-app.use("/order", orderRoutes)
-app.use("/prescription", prescriptionRoutes)
+app.use("/notes", noteRoutes);
+app.use("/cart", cartRoutes);
+app.use("/order", orderRoutes);
+app.use("/prescription", prescriptionRoutes);
 app.use("/category", categoryRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/dashboard", dashboardRoutes);
-app.use("/deals", dealRoutes)
+app.use("/deals", dealRoutes);
+app.use("/chat", chatRoutes);
 
 // app.use("/chat", chatRoutes)
-
 
 app.use(notFoundHandler);
 app.use(errorHandler);
