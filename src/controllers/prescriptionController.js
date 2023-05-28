@@ -109,8 +109,6 @@ const updateStatus = async (req, res) => {
     updatedPrescription
   );
 
-  console.log(prescriptionOrder);
-
   if (
     updatedPrescription.deliveryStatus === "ofd" ||
     updatedPrescription.deliveryStatus === "delivered"
@@ -148,7 +146,6 @@ const initiateOrder = async (req, res) => {
 
 //DELETE PRESCRIPTION ORDER (Cancel or Decline the Order)
 const deletePrescriptionOrder = async (req, res) => {
-  console.log(req.params.id);
   const deleteOrd = await Prescription.findByIdAndUpdate(req.params.id, {
     failed: true,
   });

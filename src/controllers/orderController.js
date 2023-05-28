@@ -47,7 +47,6 @@ const addOrder = async (req, res) => {
   });
 
   const { name, email } = await User.findById(userId);
-  console.log(email);
   sendMail(
     email,
     "Order Placed Successfully",
@@ -107,7 +106,6 @@ const updateOrder = async (req, res) => {
 
 //DELETE ORDER (Cancel or Decline the Order)
 const deleteOrder = async (req, res) => {
-  console.log(req.params.id);
   const deleteOrd = await Order.findByIdAndUpdate(req.params.id, {
     failed: true,
   });

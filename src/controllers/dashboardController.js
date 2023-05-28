@@ -61,7 +61,6 @@ const getDetails = async (req, res) => {
   );
   figures.failedDeliveries =
     failedOrdDeliveries.length + failedPresDeliveries.length;
-  console.log(failedPresDeliveries);
 
   //TOTAL CUSTOMERS
   let customers = [];
